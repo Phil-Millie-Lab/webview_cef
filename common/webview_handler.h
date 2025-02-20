@@ -157,6 +157,7 @@ public:
     void reload(int browserId);
     void openDevTools(int browserId);
     void openWebView(int browserId, std::string url, std::string title);
+    bool closeWebView(int browserId);
     void imeSetComposition(int browserId, std::string text);
     void imeCommitText(int browserId, std::string text);
     void setClientFocus(int browserId, bool focus);

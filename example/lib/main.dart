@@ -192,6 +192,16 @@ class _MyAppState extends State<MyApp> {
                   child: const Icon(Icons.open_in_new),
                 ),
               ),
+              SizedBox(
+                height: 48,
+                child: MaterialButton(
+                  onPressed: () async {
+                    bool resp = await _controller.closeWebView();
+                    print("resp : $resp");
+                  },
+                  child: const Icon(Icons.close),
+                ),
+              ),
               Expanded(
                 child: TextField(
                   controller: _textController,

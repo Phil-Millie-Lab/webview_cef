@@ -326,6 +326,12 @@ namespace webview_cef {
         	m_handler->openWebView(browserId, url, title);
         	result(1, nullptr);
         }
+        else if (name.compare("closeWebView") == 0) {
+			int browserId = int(webview_value_get_int(values));
+			bool returnValue = m_handler->closeWebView(browserId);
+            result(1, webview_value_new_bool(returnValue));
+			return;
+        }
 		else if (name.compare("imeSetComposition") == 0) {
 			int browserId = int(webview_value_get_int(webview_value_get_list_value(values, 0)));
 			const auto text = webview_value_get_string(webview_value_get_list_value(values, 1));

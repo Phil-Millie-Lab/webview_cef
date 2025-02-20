@@ -134,12 +134,20 @@ class WebViewController extends ValueNotifier<bool> {
   }
 
   Future<void> openWebView({required String url, title = ""}) async {
-
     if(_isDisposed) {
       return;
     }
     assert(value);
     return _pluginChannel.invokeMethod('openWebView', [_browserId, url, title]);
+  }
+
+  Future<bool> closeWebView() async {
+    if(_isDisposed) {
+      return false;
+    }
+    assert(value);
+    bool result = await _pluginChannel.invokeMethod('closeWebView', _browserId);
+    return result;
   }
 
   Future<void> imeSetComposition(String composingText) async {

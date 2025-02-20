@@ -162,6 +162,20 @@ bool WebviewHandler::DoClose(CefRefPtr<CefBrowser> browser) {
 }
 
 void WebviewHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
+    int maxId = 0;
+    CefRefPtr<CefBrowser> lastBrowser = nullptr;
+
+    for (const auto& pair : browser_map_) {
+        if (pair.first > maxId) {
+            maxId = pair.first;
+            lastBrowser = pair.second.browser;
+        }
+    }
+
+    if (lastBrowser) {
+        browser_map_.erase(maxId);
+    }
+
     CEF_REQUIRE_UI_THREAD();
 }
 
@@ -447,9 +461,13 @@ void WebviewHandler::openDevTools(int browserId) {
 }
 
 void WebviewHandler::openWebView(int browserId, std::string url, std::string title) {
+    std::cout << "openWebView : " <<  std::endl;
     if (browser_map_.size() == 2) {
+    std::cout << "openWebView 2 : " <<  std::endl;
+
         return;  // 브라우저가 2개면 종료
     }
+std::cout << "openWebView 3 : " <<  std::endl;
 
     auto it = browser_map_.find(browserId);
     if (it != browser_map_.end()) {
@@ -459,6 +477,30 @@ void WebviewHandler::openWebView(int browserId, std::string url, std::string tit
 #endif
         it->second.browser->GetHost()->CreateBrowser(windowInfo, this, url, CefBrowserSettings(), nullptr, nullptr);
     }
+}
+
+bool WebviewHandler::closeWebView(int browserId)
+{
+    if (browser_map_.size() == 1) {
+        return false;  // 브라우저가 1개면 false
+    }
+
+    int maxId = 0;
+    CefRefPtr<CefBrowser> lastBrowser = nullptr;
+
+    // 마지막 브라우저 찾기
+    for (const auto& pair : browser_map_) {
+        if (pair.first > maxId) {
+            maxId = pair.first;
+            lastBrowser = pair.second.browser;
+        }
+    }
+
+    if (lastBrowser && browser_map_.size() == 2) {
+        lastBrowser->GetHost()->CloseBrowser(true);
+        return true;  // 브라우저가 2개일 때 종료
+    }
+    return false;
 }
 
 
