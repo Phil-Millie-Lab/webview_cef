@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     await WebviewManager().initialize(userAgent: "test/userAgent");
-    String url = "www.baidu.com";
+    String url = "www.millie.co.kr";
     _textController.text = url;
     //unified interface for all platforms set user agent
     _controller.setWebviewListener(WebviewEventsListener(
@@ -125,7 +125,7 @@ class _MyAppState extends State<MyApp> {
     //     _controller2.setJavaScriptChannels(jsChannels);
     //   },
     // ));
-    // await _controller2.initialize("baidu.com");
+    // await _controller2.initialize("millie.co.kr");
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -190,7 +190,7 @@ class _MyAppState extends State<MyApp> {
                     _controller.loadUrl(url);
                     WebviewManager().visitAllCookies().then((value) {
                       allCookies = Map.of(value);
-                      if (url == "baidu.com") {
+                      if (url == "millie.co.kr") {
                         if (!allCookies.containsKey('.$url') ||
                             !Map.of(allCookies['.$url']).containsKey('test')) {
                           WebviewManager().setCookie(url, 'test', 'test123');
