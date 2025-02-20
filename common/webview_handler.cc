@@ -277,11 +277,10 @@ void WebviewHandler::createBrowser(std::string url, std::function<void(int)> cal
 		return;
 	}
 #endif
+    CefBrowserSettings browser_settings;
     //브라우저 한국어 설정
     CefString lang_list("ko-KR,ko");
     CefString(&browser_settings.accept_language_list) = lang_list;
-    //브라우저 한국어 설정
-    CefBrowserSettings browser_settings;
     browser_settings.windowless_frame_rate = 30;
     CefWindowInfo window_info;
     window_info.SetAsWindowless(0);
