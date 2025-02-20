@@ -446,6 +446,22 @@ void WebviewHandler::openDevTools(int browserId) {
     }
 }
 
+void WebviewHandler::openWebView(int browserId, std::string url, std::string title) {
+    if (browser_map_.size() == 2) {
+        return;  // 브라우저가 2개면 종료
+    }
+
+    auto it = browser_map_.find(browserId);
+    if (it != browser_map_.end()) {
+        CefWindowInfo windowInfo;
+#ifdef OS_WIN
+        windowInfo.SetAsPopup(nullptr, title);
+#endif
+        it->second.browser->GetHost()->CreateBrowser(windowInfo, this, url, CefBrowserSettings(), nullptr, nullptr);
+    }
+}
+
+
 void WebviewHandler::imeSetComposition(int browserId, std::string text)
 {
     auto it = browser_map_.find(browserId);

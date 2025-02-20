@@ -183,6 +183,15 @@ class _MyAppState extends State<MyApp> {
                   child: const Icon(Icons.developer_mode),
                 ),
               ),
+              SizedBox(
+                height: 48,
+                child: MaterialButton(
+                  onPressed: () {
+                    _controller.openWebView(url: "www.naver.com",);
+                  },
+                  child: const Icon(Icons.open_in_new),
+                ),
+              ),
               Expanded(
                 child: TextField(
                   controller: _textController,
