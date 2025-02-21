@@ -6,6 +6,21 @@ webview_handler.cc
 4가지 작성해줘야됨
 데이터 널처리해줘야함 안해주면 강제종료
 
+late WebViewController _controller;
+_controller.closeWebView(); 
+
+_controller는 여러 개 생성 가능
+_controller에서 크로미움에 관한 동작 컨트롤 가능 기존 인앱, 새창 등등 하나에서 다 가능
+다만 JSHandler는 각 선언된 _controller만 통신 가능
+
+
+closeWebView는 webview.dart에 정의되어있음 Bool형태로 데이터 리스폰 받음
+webview_value_new_bool 타입으로 감싸줘야됨
+result(1 -> 성공, 0 -> 실패 // 다음에 변수값 넣어주기) 
+result(1, webview_value_new_bool(returnValue));
+
+_controller.closeWebView() 진행과정
+example.dart -> webview.dart -> webview_plugin.cc -> webview_hanlder.cc (실제적으로 C기능이 이루어짐) -> webview_plugin.cc -> webview.dart -> example.dart
 
 # WebView CEF
 
