@@ -22,6 +22,23 @@ result(1, webview_value_new_bool(returnValue));
 _controller.closeWebView() 진행과정
 example.dart -> webview.dart -> webview_plugin.cc -> webview_hanlder.cc (실제적으로 C기능이 이루어짐) -> webview_plugin.cc -> webview.dart -> example.dart
 
+JS 핸들러
+
+JavascriptChannel(
+  name: 'Test',
+  onMessageReceived: (JavascriptMessage message) {
+    _controller.sendJavaScriptChannelCallBack(
+    false,
+    "{'code':'200','message':'print succeed!'}",
+    message.callbackId,
+    message.frameId);
+}),
+
+Web
+Test("hello", function test(e) {console.log(e)})
+-> {code: '200', message: 'print succeed!'}
+
+
 # WebView CEF
 
 <a href="https://pub.dev/packages/webview_cef"><img src="https://img.shields.io/pub/likes/webview_cef?logo=dart" alt="Pub.dev likes"/></a> <a href="https://pub.dev/packages/webview_cef" alt="Pub.dev popularity"><img src="https://img.shields.io/pub/popularity/webview_cef?logo=dart"/></a> <a href="https://pub.dev/packages/webview_cef"><img src="https://img.shields.io/pub/points/webview_cef?logo=dart" alt="Pub.dev points"/></a> <a href="https://pub.dev/packages/webview_cef"><img src="https://img.shields.io/pub/v/webview_cef.svg" alt="latest version"/></a> <a href="https://pub.dev/packages/webview_cef"><img src="https://img.shields.io/badge/macOS%20%7C%20Windows%20%7C%20Linux-blue?logo=flutter" alt="Platform"/></a>
