@@ -94,7 +94,7 @@ class _MyAppState extends State<MyApp> {
 
         };
         //also you can build your own jssdk by execute JavaScript code to CEF
-
+        _controller.setJavaScriptChannels(jsChannels);
         _controller.executeJavaScript("function abc(e){return 'abc:'+ e}");
         _controller
             .evaluateJavascript("abc('test')")
