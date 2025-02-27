@@ -25,7 +25,7 @@ example.dart -> webview.dart -> webview_plugin.cc -> webview_hanlder.cc (실제�
 JS 핸들러
 
 JavascriptChannel(
-  name: 'Test',
+  name: 'window.Test',
   onMessageReceived: (JavascriptMessage message) {
     _controller.sendJavaScriptChannelCallBack(
     false,
@@ -37,6 +37,52 @@ JavascriptChannel(
 Web
 Test("hello", function test(e) {console.log(e)})
 -> {code: '200', message: 'print succeed!'}
+
+///주노
+_POST_
+_POST.
+뒤에 _ . 들어가면 안됨
+채널은 하나만 선언 가능
+
+#### 프론트팀에서 받는 메시지
+JavaScriptMessage : {“function”:“routing”,“parameter”:{“id”:“d48ad5e3-be82-4f11-bafe-bf9bc8d5d7bc”,“url”:“/v3/oauth?next=https%3A%2F%2Fwww.millie.co.kr”}}
+
+
+window._POST({function:relocated,parameter:{cfi:OnnnnX,url:www.millie.co.kr}}) 
+-> String 타입 아니면 에러남
+window._POST("{function:relocated,parameter:{cfi:OnnnnX,url:www.millie.co.kr}}")
+-> flutter: "{function:relocated,parameter:{cfi:OnnnnX,url:www.millie.co.kr}}"
+-> 이렇게 받아야될까 아니면 따옴표처리 해서 받아야 될까
+
+### 주노가 줄떄
+window._POST('{"function":"relocated","parameter":{"cfi":"OnnnnX","url":"www.millie.co.kr"}}')
+-> print(message.message); flutter: "{\"function\":\"relocated\",\"parameter\":{\"cfi\":\"OnnnnX\",\"url\":\"www.millie.co.kr\"}}"
+-> print(jsonDecode(message.message)); flutter: {"function":"relocated","parameter":{"cfi":"OnnnnX","url":"www.millie.co.kr"}}
+
+
+
+JavascriptChannel(
+  name: '_POST',
+  onMessageReceived: (JavascriptMessage message) {
+  _controller.sendJavaScriptChannelCallBack(
+  false,
+  "{'code':'200','message':'print succeed!'}",
+  message.callbackId,
+  message.frameId);
+}),
+
+### 핸들러 해야될 작업 목록
+setBrightness(Brightness.light); //다크모드
+setApplicationNameForUserAgent
+#launch('http://127.0.0.1:$port?bookSeq=$bookId&memSeq=$memSeq&type=BOOK',) -> _controller.loadUrl(url)
+#reTitle(bookName, systemAppTheme); -> 윈도우는 안쓰는듯 맥만 사용중
+# focusWebView() -> _controller.setClientFocus(focus)
+state.initialize();
+state.setBackgroundColor(Colors.transparent);
+state.setPopupWindowPolicy(WebviewPopupWindowPolicy.allow);
+state.setCacheDisabled(false);
+state.setSize(const Size(0.0, 0.0), 1.0);
+state.addScriptToExecuteOnDocumentCreated('''
 
 
 # WebView CEF

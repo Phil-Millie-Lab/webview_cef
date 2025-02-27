@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:webview_cef/webview_cef.dart';
@@ -70,6 +71,7 @@ class _MyAppState extends State<MyApp> {
     //unified interface for all platforms set user agent
     _controller.setWebviewListener(WebviewEventsListener(
       onTitleChanged: (t) {
+        print("title : $t");
         setState(() {
           title = t;
         });
@@ -78,19 +80,21 @@ class _MyAppState extends State<MyApp> {
         _textController.text = url;
         final Set<JavascriptChannel> jsChannels = {
           JavascriptChannel(
-              name: 'Print',
+              name: '_POST',
               onMessageReceived: (JavascriptMessage message) {
                 print(message.message);
+                print(jsonDecode(message.message));
+                print(jsonEncode(jsonDecode(message.message)));
                 _controller.sendJavaScriptChannelCallBack(
                     false,
                     "{'code':'200','message':'print succeed!'}",
                     message.callbackId,
                     message.frameId);
               }),
+
         };
-        //normal JavaScriptChannels
-        _controller.setJavaScriptChannels(jsChannels);
         //also you can build your own jssdk by execute JavaScript code to CEF
+
         _controller.executeJavaScript("function abc(e){return 'abc:'+ e}");
         _controller
             .evaluateJavascript("abc('test')")
@@ -190,6 +194,16 @@ class _MyAppState extends State<MyApp> {
                     _controller.openWebView(url: "www.naver.com",);
                   },
                   child: const Icon(Icons.open_in_new),
+                ),
+              ),
+              SizedBox(
+                height: 48,
+                child: MaterialButton(
+                  onPressed: () {
+                    _controller.openWebView(url: "www.naver.com", title: "12345");
+                    _controller.set
+                  },
+                  child: const Icon(Icons.abc),
                 ),
               ),
               SizedBox(

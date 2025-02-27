@@ -461,14 +461,9 @@ void WebviewHandler::openDevTools(int browserId) {
 }
 
 void WebviewHandler::openWebView(int browserId, std::string url, std::string title) {
-    std::cout << "openWebView : " <<  std::endl;
     if (browser_map_.size() == 2) {
-    std::cout << "openWebView 2 : " <<  std::endl;
-
-        return;  // 브라우저가 2개면 종료
+    return;  // 브라우저가 2개면 종료
     }
-std::cout << "openWebView 3 : " <<  std::endl;
-
     auto it = browser_map_.find(browserId);
     if (it != browser_map_.end()) {
         CefWindowInfo windowInfo;
