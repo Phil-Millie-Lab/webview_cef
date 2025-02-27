@@ -428,6 +428,25 @@ void WebviewHandler::loadUrl(int browserId, std::string url)
     }
 }
 
+void WebviewHandler::loadUrlSub(int browserId, std::string url)
+{
+    int maxId = 0;
+    CefRefPtr<CefBrowser> lastBrowser = nullptr;
+
+    // 마지막 브라우저 찾기
+    for (const auto& pair : browser_map_) {
+        if (pair.first > maxId) {
+            maxId = pair.first;
+            lastBrowser = pair.second.browser;
+        }
+    }
+
+    if (lastBrowser && browser_map_.size() == 2) {
+    lastBrowser->GetMainFrame()->LoadURL(url);
+    }
+}
+
+
 void WebviewHandler::goForward(int browserId) {
     auto it = browser_map_.find(browserId);
     if (it != browser_map_.end()) {

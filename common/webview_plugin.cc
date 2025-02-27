@@ -276,6 +276,14 @@ namespace webview_cef {
 				result(1, nullptr);
 			}
 		}
+		else if (name.compare("loadUrlSub") == 0) {
+        	int browserId = int(webview_value_get_int(webview_value_get_list_value(values, 0)));
+        	const auto url = webview_value_get_string(webview_value_get_list_value(values, 1));
+        	if(url != nullptr){
+        		m_handler->loadUrlSub(browserId, url);
+        		result(1, nullptr);
+        	}
+        }
 		else if (name.compare("setSize") == 0) {
 			int browserId = int(webview_value_get_int(webview_value_get_list_value(values, 0)));
 			const auto dpi = webview_value_get_double(webview_value_get_list_value(values, 1));

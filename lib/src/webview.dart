@@ -100,6 +100,15 @@ class WebViewController extends ValueNotifier<bool> {
     return _pluginChannel.invokeMethod('loadUrl', [_browserId, url]);
   }
 
+  /// Loads the given [url].
+  Future<void> loadUrlSub(String url) async {
+    if (_isDisposed) {
+      return;
+    }
+    assert(value);
+    return _pluginChannel.invokeMethod('loadUrlSub', [_browserId, url]);
+  }
+
   /// Reloads the current document.
   Future<void> reload() async {
     if (_isDisposed) {

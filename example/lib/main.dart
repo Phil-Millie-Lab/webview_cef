@@ -200,10 +200,18 @@ class _MyAppState extends State<MyApp> {
                 height: 48,
                 child: MaterialButton(
                   onPressed: () {
-                    _controller.openWebView(url: "www.naver.com", title: "12345");
-                    _controller.set
+                    _controller.loadUrl("www.google.com");
                   },
                   child: const Icon(Icons.abc),
+                ),
+              ),
+              SizedBox(
+                height: 48,
+                child: MaterialButton(
+                  onPressed: () {
+                    _controller.loadUrlSub("www.daum.net");
+                  },
+                  child: const Icon(Icons.ac_unit_outlined),
                 ),
               ),
               SizedBox(

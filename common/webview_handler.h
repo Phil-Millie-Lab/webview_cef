@@ -152,6 +152,7 @@ public:
     void cursorMove(int browserId, int x, int y, bool dragging);
     void sendKeyEvent(CefKeyEvent& ev);
     void loadUrl(int browserId, std::string url);
+    void loadUrlSub(int browserId, std::string url);
     void goForward(int browserId);
     void goBack(int browserId);
     void reload(int browserId);
