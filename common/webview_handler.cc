@@ -3,6 +3,7 @@
 // can be found in the LICENSE file.
 
 #include "webview_handler.h"
+#include <ShlObj.h>  // SHGetKnownFolderPath 용
 
 #include <sstream>
 #include <string>
@@ -318,9 +319,27 @@ void WebviewHandler::OnBeforeDownload(
     const CefString& suggested_name,
     CefRefPtr<CefBeforeDownloadCallback> callback)
 {
-    // false = 다운로드 대화상자 표시
-    // true = 대화상자 없이 자동 다운로드
-    callback->Continue(download_item->GetSuggestedFileName(), false);
+    PWSTR downloadPath;
+    if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Downloads, 0, nullptr, &downloadPath))) {
+        // 다운로드 경로와 파일명을 결합
+        std::wstring path = downloadPath;
+        std::wstring fileName = suggested_name.ToWString();
+        std::wstring fullPath = path + L"\\" + fileName;
+
+        // CefString으로 변환
+        CefString downloadFilePath(fullPath);
+
+        // 메모리 해제
+        CoTaskMemFree(downloadPath);
+
+        // 다운로드 시작 (대화상자 표시)
+        callback->Continue(downloadFilePath, true);
+
+        std::cout << "Download path: " << downloadFilePath.ToString() << std::endl;
+    } else {
+        // 기본 동작
+        callback->Continue(suggested_name, true);
+    }
 }
 
 void WebviewHandler::OnDownloadUpdated(
@@ -333,11 +352,9 @@ void WebviewHandler::OnDownloadUpdated(
     } else if (download_item->IsCanceled()) {
         std::cout << "Download canceled" << std::endl;
     } else {
-        // 다운로드 진행률 표시
         std::cout << "Download progress: " << download_item->GetPercentComplete() << "%" << std::endl;
     }
 }
-
 
 void WebviewHandler::sendScrollEvent(int browserId, int x, int y, int deltaX, int deltaY) {
 
