@@ -44,7 +44,6 @@ class WebViewController extends ValueNotifier<bool> {
           _javascriptChannels[channelName]!.onMessageReceived(
               JavascriptMessage(message, callbackId, frameId));
         } else {
-          print('Channel "$channelName" is not exstis');
         }
       };
 
@@ -232,6 +231,17 @@ class WebViewController extends ValueNotifier<bool> {
     return _pluginChannel.invokeMethod('sendJavaScriptChannelCallBack',
         [error, result, callbackId, _browserId, frameId]);
   }
+
+  Future<void> sendJavaScriptChannelCallBackSub(
+      bool error, String result, String callbackId, String frameId) async {
+    if (_isDisposed) {
+      return;
+    }
+    assert(value);
+    return _pluginChannel.invokeMethod('sendJavaScriptChannelCallBackSub',
+        [error, result, callbackId, _browserId, frameId]);
+  }
+
 
   Future<void> executeJavaScript(String code) async {
     if (_isDisposed) {

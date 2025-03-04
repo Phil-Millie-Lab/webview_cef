@@ -18,8 +18,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late WebViewController _controller;
-
-  // late WebViewController _controller2;
   final _textController = TextEditingController();
   String title = "";
   Map allCookies = {};
@@ -199,10 +197,65 @@ class _MyAppState extends State<MyApp> {
               SizedBox(
                 height: 48,
                 child: MaterialButton(
-                  onPressed: () {
-                    _controller.openWebView(url: "www.naver.com",);
+                  onPressed: () async {
+                    print("openWebView 1");
+                    await _controller.openWebView(url: "www.naver.com",);
+                    final Set<JavascriptChannel> jsChannels2 = {
+                      JavascriptChannel(
+                          name: '_POST2',
+                          onMessageReceived: (JavascriptMessage message) {
+                            print(message.message);
+                            print(jsonDecode(message.message));
+                            print(jsonEncode(jsonDecode(message.message)));
+                            _controller.sendJavaScriptChannelCallBackSub(
+                                false,
+                                "{'code':'200','message':'print succeed!!!'}",
+                                message.callbackId,
+                                message.frameId);
+                          }),
+                    };
+                    _controller.setJavaScriptChannelsSub(jsChannels2);
+                    print("openWebView 2");
                   },
                   child: Text("openWebView"),
+                ),
+              ),
+              SizedBox(
+                height: 48,
+                child: MaterialButton(
+                  onPressed: () {
+                    final Set<JavascriptChannel> jsChannels2 = {
+                      JavascriptChannel(
+                          name: '_POST2',
+                          onMessageReceived: (JavascriptMessage message) {
+                            print(message.message);
+                            print(jsonDecode(message.message));
+                            print(jsonEncode(jsonDecode(message.message)));
+                            _controller.sendJavaScriptChannelCallBackSub(
+                                false,
+                                "{'code':'200','message':'print succeed!!!'}",
+                                message.callbackId,
+                                message.frameId);
+                          }),
+                    };
+                    _controller.setJavaScriptChannelsSub(jsChannels2);
+                    },
+                  child: Text("setJavaScriptChannelsSub"),
+                ),
+              ),
+              SizedBox(
+                height: 48,
+                child: MaterialButton(
+                  onPressed: () {
+                    _controller.executeJavaScriptSub('''
+      if (window._POST2) {
+        window._POST2('{"test": "testing _POST2 channel"}');
+      } else {
+        console.error('_POST2 channel not found');
+      }
+    ''');
+                    },
+                  child: Text("executeJavaScriptSub"),
                 ),
               ),
               SizedBox(

@@ -107,7 +107,8 @@ class WebviewManager extends ValueNotifier<bool> {
         return;
       case 'javascriptChannelMessage':
         int browserId = call.arguments['browserId'] as int;
-        _webViews[browserId]?.onJavascriptChannelMessage?.call(
+        /// phil 브라우저 아이디 1로 고정해야됨
+        _webViews[1]?.onJavascriptChannelMessage?.call(
             call.arguments['channel'] as String,
             call.arguments['message'] as String,
             call.arguments['callbackId'] as String,

@@ -172,10 +172,15 @@ public:
     void setJavaScriptChannels(int browserId, const std::vector<std::string> channels);
     void setJavaScriptChannelsSub(int browserId, const std::vector<std::string> channels);
     void sendJavaScriptChannelCallBack(const bool error, const std::string result, const std::string callbackId, const int browserId, const std::string frameId);
+    void sendJavaScriptChannelCallBackSub(const bool error, const std::string result, const std::string callbackId, const int browserId, const
+    std::string frameId);
     void executeJavaScript(int browserId, const std::string code, std::function<void(CefRefPtr<CefValue>)> callback = nullptr);
     void executeJavaScriptSub(int browserId, const std::string code, std::function<void(CefRefPtr<CefValue>)> callback = nullptr);
 
 private:
+    //AfterCreate 체크하는 변수
+    int m_newBrowserId = -1;
+
     // List of existing browser windows. Only accessed on the CEF UI thread.
     std::unordered_map<int, browser_info> browser_map_;
 
