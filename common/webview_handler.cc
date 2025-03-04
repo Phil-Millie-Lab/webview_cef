@@ -147,6 +147,7 @@ bool WebviewHandler::OnConsoleMessage(CefRefPtr<CefBrowser> browser,
 }
 
 void WebviewHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
+    std::cout << "OnAfterCreated : " << browser << std::endl;
     CEF_REQUIRE_UI_THREAD();
     if (!browser->IsPopup()) {
         browser_map_.emplace(browser->GetIdentifier(), browser_info());
@@ -162,21 +163,21 @@ bool WebviewHandler::DoClose(CefRefPtr<CefBrowser> browser) {
 }
 
 void WebviewHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
-    int maxId = 0;
-    CefRefPtr<CefBrowser> lastBrowser = nullptr;
+    ///개발자도구도 여길탐. 개발자도구는 브라우저로 인식을 안하는데 여기를 탐 그래서 브라우저만 지워버림
+    if(browser_map_.size() == 2) {
+    std::cout << "OnBeforeClose : " << browser << std::endl;
+    std::cout << "Current open browsers count: " << browser_map_.size() << std::endl;
 
-    for (const auto& pair : browser_map_) {
-        if (pair.first > maxId) {
-            maxId = pair.first;
-            lastBrowser = pair.second.browser;
-        }
+    int browserId = browser->GetIdentifier();
+    std::cout << "OnBeforeClose Browser ID: " << browserId << std::endl;  // browserId 사용
+
+    auto it = browser_map_.find(browserId);  // browserId를 사용하여 맵에서 검색
+    if (it != browser_map_.end()) {
+        browser_map_.erase(it);
+        std::cout << "Browser removed from map, current size: " << browser_map_.size() << std::endl;
     }
-
-    if (lastBrowser) {
-        browser_map_.erase(maxId);
-    }
-
     CEF_REQUIRE_UI_THREAD();
+    }
 }
 
 bool WebviewHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
@@ -275,10 +276,12 @@ bool WebviewHandler::IsChromeRuntimeEnabled() {
 
 void WebviewHandler::closeBrowser(int browserId)
 {
+    std::cout << "closeBrowser : " << browserId << std::endl;
     auto it = browser_map_.find(browserId);
     if(it != browser_map_.end()){
         it->second.browser->GetHost()->CloseBrowser(true);
         it->second.browser = nullptr;
+        std::cout << "closeBrowser2 browserId: " << (*it).first << std::endl;
         browser_map_.erase(it);
     }
 }
@@ -469,8 +472,11 @@ void WebviewHandler::reload(int browserId) {
 }
 
 void WebviewHandler::openDevTools(int browserId) {
+    std::cout << "openDevTools : " << browserId << std::endl;
     auto it = browser_map_.find(browserId);
+    std::cout << "openDevTools2 : " << std::endl;
     if (it != browser_map_.end()) {
+    std::cout << "openDevTools3 : " << browserId << std::endl;
         CefWindowInfo windowInfo;
 #ifdef OS_WIN
         windowInfo.SetAsPopup(nullptr, "DevTools");
@@ -481,7 +487,7 @@ void WebviewHandler::openDevTools(int browserId) {
 
 void WebviewHandler::openWebView(int browserId, std::string url, std::string title) {
     std::cout << "openWebView : " << browserId << std::endl;
-    if (browser_map_.size() == 10) {
+    if (browser_map_.size() == 2) {
     std::cout << "openWebView return : " << browserId << std::endl;
     return;  // 브라우저가 2개면 종료
     }
@@ -500,6 +506,16 @@ void WebviewHandler::openWebView(int browserId, std::string url, std::string tit
 
 bool WebviewHandler::closeWebView(int browserId)
 {
+    ///phil start
+    std::cout << "closeWebView : " << browserId << std::endl;
+    std::cout << "Current open browsers count: " << browser_map_.size() << std::endl;
+
+    // 또는
+    for (auto it = browser_map_.begin(); it != browser_map_.end(); ++it) {
+        std::cout << "Browser ID: " << it->first << std::endl;
+    }
+    ///phil end
+
     if (browser_map_.size() == 1) {
         return false;  // 브라우저가 1개면 false
     }
@@ -514,6 +530,9 @@ bool WebviewHandler::closeWebView(int browserId)
             lastBrowser = pair.second.browser;
         }
     }
+    std::cout << "closeWebView browser_map_.size() : " << browser_map_.size() << std::endl;
+    std::cout << "closeWebView lastBrowser : " << lastBrowser << std::endl;
+    std::cout << "closeWebView maxId : " << maxId << std::endl;
 
     if (lastBrowser && browser_map_.size() == 2) {
         lastBrowser->GetHost()->CloseBrowser(true);

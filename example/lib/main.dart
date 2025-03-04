@@ -143,39 +143,48 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
       home: Scaffold(
-          body: Column(
+          body: Row(
         children: [
-          SizedBox(
-            height: 20,
-            child: Text(title),
-          ),
-          Row(
+          // SizedBox(
+          //   height: 20,
+          //   child: Text(title),
+          // ),
+          Column(
             children: [
+              // SizedBox(
+              //   height: 48,
+              //   child: MaterialButton(
+              //     onPressed: () {
+              //       _controller.reload();
+              //     },
+              //     child: const Icon(Icons.refresh),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 48,
+              //   child: MaterialButton(
+              //     onPressed: () {
+              //       _controller.goBack();
+              //     },
+              //     child: const Icon(Icons.arrow_left),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 48,
+              //   child: MaterialButton(
+              //     onPressed: () {
+              //       _controller.goForward();
+              //     },
+              //     child: const Icon(Icons.arrow_right),
+              //   ),
+              // ),
               SizedBox(
                 height: 48,
                 child: MaterialButton(
                   onPressed: () {
-                    _controller.reload();
+                    _controller.openDevTools();
                   },
-                  child: const Icon(Icons.refresh),
-                ),
-              ),
-              SizedBox(
-                height: 48,
-                child: MaterialButton(
-                  onPressed: () {
-                    _controller.goBack();
-                  },
-                  child: const Icon(Icons.arrow_left),
-                ),
-              ),
-              SizedBox(
-                height: 48,
-                child: MaterialButton(
-                  onPressed: () {
-                    _controller.goForward();
-                  },
-                  child: const Icon(Icons.arrow_right),
+                  child: Text("openDevTools"),
                 ),
               ),
               SizedBox(
@@ -184,7 +193,7 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {
                     _controller.openDevTools();
                   },
-                  child: const Icon(Icons.developer_mode),
+                  child: Text("openDevToolsSub"),
                 ),
               ),
               SizedBox(
@@ -193,7 +202,7 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {
                     _controller.openWebView(url: "www.naver.com",);
                   },
-                  child: const Icon(Icons.open_in_new),
+                  child: Text("openWebView"),
                 ),
               ),
               SizedBox(
@@ -202,7 +211,7 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {
                     _controller.loadUrl("www.google.com");
                   },
-                  child: const Icon(Icons.abc),
+                  child: Text("loadUrl"),
                 ),
               ),
               SizedBox(
@@ -211,7 +220,7 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {
                     _controller.loadUrlSub("www.daum.net");
                   },
-                  child: const Icon(Icons.ac_unit_outlined),
+                  child: Text("loadUrlSub"),
                 ),
               ),
               SizedBox(
@@ -221,28 +230,28 @@ class _MyAppState extends State<MyApp> {
                     bool resp = await _controller.closeWebView();
                     print("resp : $resp");
                   },
-                  child: const Icon(Icons.close),
+                  child: Text("closeWebView"),
                 ),
               ),
-              Expanded(
-                child: TextField(
-                  controller: _textController,
-                  onSubmitted: (url) {
-                    _controller.loadUrl(url);
-                    WebviewManager().visitAllCookies().then((value) {
-                      allCookies = Map.of(value);
-                      if (url == "millie.co.kr") {
-                        if (!allCookies.containsKey('.$url') ||
-                            !Map.of(allCookies['.$url']).containsKey('test')) {
-                          WebviewManager().setCookie(url, 'test', 'test123');
-                        } else {
-                          WebviewManager().deleteCookie(url, 'test');
-                        }
-                      }
-                    });
-                  },
-                ),
-              ),
+              // Expanded(
+              //   child: TextField(
+              //     controller: _textController,
+              //     onSubmitted: (url) {
+              //       _controller.loadUrl(url);
+              //       WebviewManager().visitAllCookies().then((value) {
+              //         allCookies = Map.of(value);
+              //         if (url == "millie.co.kr") {
+              //           if (!allCookies.containsKey('.$url') ||
+              //               !Map.of(allCookies['.$url']).containsKey('test')) {
+              //             WebviewManager().setCookie(url, 'test', 'test123');
+              //           } else {
+              //             WebviewManager().deleteCookie(url, 'test');
+              //           }
+              //         }
+              //       });
+              //     },
+              //   ),
+              // ),
             ],
           ),
           Expanded(
