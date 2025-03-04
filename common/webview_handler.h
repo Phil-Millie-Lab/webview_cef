@@ -169,9 +169,11 @@ public:
     void visitUrlCookies(const std::string& domain, const bool& isHttpOnly, std::function<void(std::map<std::string, std::map<std::string, std::string>>)> callback);
 
     void setJavaScriptChannels(int browserId, const std::vector<std::string> channels);
+    void setJavaScriptChannelsSub(int browserId, const std::vector<std::string> channels);
     void sendJavaScriptChannelCallBack(const bool error, const std::string result, const std::string callbackId, const int browserId, const std::string frameId);
     void executeJavaScript(int browserId, const std::string code, std::function<void(CefRefPtr<CefValue>)> callback = nullptr);
-    
+    void executeJavaScriptSub(int browserId, const std::string code, std::function<void(CefRefPtr<CefValue>)> callback = nullptr);
+
 private:
     // List of existing browser windows. Only accessed on the CEF UI thread.
     std::unordered_map<int, browser_info> browser_map_;

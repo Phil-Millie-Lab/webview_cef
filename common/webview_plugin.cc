@@ -425,6 +425,18 @@ namespace webview_cef {
 			m_handler->setJavaScriptChannels(browserId, channels);
 			result(1, nullptr);
 		}
+		else if(name.compare("setJavaScriptChannelsSub") == 0){
+        	int browserId = int(webview_value_get_int(webview_value_get_list_value(values, 0)));
+        	WValue *list = webview_value_get_list_value(values, 1);
+        	auto len = webview_value_get_len(list);
+        	std::vector<std::string> channels;
+        	for(size_t i = 0; i < len; i++){
+        		auto channel = webview_value_get_string(webview_value_get_list_value(list, i));
+        		channels.push_back(channel);
+        	}
+        	m_handler->setJavaScriptChannelsSub(browserId, channels);
+        	result(1, nullptr);
+        }
 		else if (name.compare("sendJavaScriptChannelCallBack") == 0) {
 			const auto error = webview_value_get_bool(webview_value_get_list_value(values, 0));
 			const auto ret = webview_value_get_string(webview_value_get_list_value(values, 1));
@@ -440,6 +452,12 @@ namespace webview_cef {
 			m_handler->executeJavaScript(browserId, code);
 			result(1, nullptr);
 		}
+		else if(name.compare("executeJavaScriptSub") == 0){
+        	int browserId = int(webview_value_get_int(webview_value_get_list_value(values, 0)));
+        	const auto code = webview_value_get_string(webview_value_get_list_value(values, 1));
+        	m_handler->executeJavaScriptSub(browserId, code);
+        	result(1, nullptr);
+        }
 		else if(name.compare("evaluateJavascript") == 0){
 			int browserId = int(webview_value_get_int(webview_value_get_list_value(values, 0)));
 			const auto code = webview_value_get_string(webview_value_get_list_value(values, 1));

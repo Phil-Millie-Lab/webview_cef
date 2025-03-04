@@ -200,6 +200,21 @@ class WebViewController extends ValueNotifier<bool> {
         [_browserId, _extractJavascriptChannelNames(channels).toList()]);
   }
 
+  Future<void> setJavaScriptChannelsSub(Set<JavascriptChannel> channels) async {
+    if (_isDisposed) {
+      return;
+    }
+    assert(value);
+    _assertJavascriptChannelNamesAreUnique(channels);
+
+    for (var channel in channels) {
+      _javascriptChannels[channel.name] = channel;
+    }
+
+    return _pluginChannel.invokeMethod('setJavaScriptChannelsSub',
+        [_browserId, _extractJavascriptChannelNames(channels).toList()]);
+  }
+
   Future<void> sendJavaScriptChannelCallBack(
       bool error, String result, String callbackId, String frameId) async {
     if (_isDisposed) {
@@ -216,6 +231,14 @@ class WebViewController extends ValueNotifier<bool> {
     }
     assert(value);
     return _pluginChannel.invokeMethod('executeJavaScript', [_browserId, code]);
+  }
+
+  Future<void> executeJavaScriptSub(String code) async {
+    if (_isDisposed) {
+      return;
+    }
+    assert(value);
+    return _pluginChannel.invokeMethod('executeJavaScriptSub', [_browserId, code]);
   }
 
   Future<dynamic> evaluateJavascript(String code) async {

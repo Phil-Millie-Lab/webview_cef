@@ -480,11 +480,16 @@ void WebviewHandler::openDevTools(int browserId) {
 }
 
 void WebviewHandler::openWebView(int browserId, std::string url, std::string title) {
-    if (browser_map_.size() == 2) {
+    std::cout << "openWebView : " << browserId << std::endl;
+    if (browser_map_.size() == 10) {
+    std::cout << "openWebView return : " << browserId << std::endl;
     return;  // 브라우저가 2개면 종료
     }
+    std::cout << "openWebView2 : " << browserId << std::endl;
     auto it = browser_map_.find(browserId);
     if (it != browser_map_.end()) {
+        std::cout << "openWebView3 : " << browserId << std::endl;
+
         CefWindowInfo windowInfo;
 #ifdef OS_WIN
         windowInfo.SetAsPopup(nullptr, title);
@@ -642,6 +647,21 @@ void WebviewHandler::setJavaScriptChannels(int browserId, const std::vector<std:
     executeJavaScript(browserId, extensionCode);
 }
 
+void WebviewHandler::setJavaScriptChannelsSub(int browserId, const std::vector<std::string> channels)
+{
+
+    std::string extensionCode = "try{";
+    for(auto& channel : channels)
+    {
+        extensionCode += channel;
+        extensionCode += " = (e,r) => {external.JavaScriptChannel('";
+        extensionCode += channel;
+        extensionCode += "',e,r)};";
+    }
+    extensionCode += "}catch(e){console.log(e);}";
+    executeJavaScript(browserId, extensionCode);
+}
+
 void WebviewHandler::sendJavaScriptChannelCallBack(const bool error, const std::string result, const std::string callbackId, const int browserId, const std::string frameId)
 {
     CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create(kExecuteJsCallbackMessage);
@@ -701,6 +721,12 @@ void WebviewHandler::executeJavaScript(int browserId, const std::string code, st
         }
     }
 }
+
+void WebviewHandler::executeJavaScriptSub(int browserId, const std::string code, std::function<void(CefRefPtr<CefValue>)> callback)
+{
+    /// 채워야함
+}
+
 
 void WebviewHandler::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect) {
     CEF_REQUIRE_UI_THREAD();
