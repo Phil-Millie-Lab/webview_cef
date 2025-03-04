@@ -485,6 +485,16 @@ void WebviewHandler::openDevTools(int browserId) {
     }
 }
 
+void WebviewHandler::openDevToolsSub(int browserId) {
+    if (browser_map_.size() >= 2) {
+        CefWindowInfo windowInfo;
+        windowInfo.SetAsPopup(nullptr, "DevTools");
+        auto map_it = std::next(browser_map_.begin(), 1);  // 두 번째 요소로 바로 이동
+        std::cout << "Opening DevTools for second browser, ID: " << map_it->first << std::endl;
+        map_it->second.browser->GetHost()->ShowDevTools(windowInfo, this, CefBrowserSettings(), CefPoint());
+    }
+}
+
 void WebviewHandler::openWebView(int browserId, std::string url, std::string title) {
     std::cout << "openWebView : " << browserId << std::endl;
     if (browser_map_.size() == 2) {

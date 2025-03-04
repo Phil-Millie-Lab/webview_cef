@@ -191,7 +191,7 @@ class _MyAppState extends State<MyApp> {
                 height: 48,
                 child: MaterialButton(
                   onPressed: () {
-                    _controller.openDevTools();
+                    _controller.openDevToolsSub();
                   },
                   child: Text("openDevToolsSub"),
                 ),
