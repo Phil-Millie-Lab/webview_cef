@@ -305,10 +305,39 @@ void WebviewHandler::createBrowser(std::string url, std::function<void(int)> cal
     CefString lang_list("ko-KR,ko");
     CefString(&browser_settings.accept_language_list) = lang_list;
     browser_settings.windowless_frame_rate = 30;
+
     CefWindowInfo window_info;
     window_info.SetAsWindowless(0);
     callback(CefBrowserHost::CreateBrowserSync(window_info, this, url, browser_settings, nullptr, nullptr)->GetIdentifier());
 }
+
+// webview_handler.cpp에 구현
+void WebviewHandler::OnBeforeDownload(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefDownloadItem> download_item,
+    const CefString& suggested_name,
+    CefRefPtr<CefBeforeDownloadCallback> callback)
+{
+    // false = 다운로드 대화상자 표시
+    // true = 대화상자 없이 자동 다운로드
+    callback->Continue(download_item->GetSuggestedFileName(), false);
+}
+
+void WebviewHandler::OnDownloadUpdated(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefDownloadItem> download_item,
+    CefRefPtr<CefDownloadItemCallback> callback)
+{
+    if (download_item->IsComplete()) {
+        std::cout << "Download completed: " << download_item->GetFullPath().ToString() << std::endl;
+    } else if (download_item->IsCanceled()) {
+        std::cout << "Download canceled" << std::endl;
+    } else {
+        // 다운로드 진행률 표시
+        std::cout << "Download progress: " << download_item->GetPercentComplete() << "%" << std::endl;
+    }
+}
+
 
 void WebviewHandler::sendScrollEvent(int browserId, int x, int y, int deltaX, int deltaY) {
 

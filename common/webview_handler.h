@@ -35,7 +35,8 @@ public CefDisplayHandler,
 public CefLifeSpanHandler,
 public CefFocusHandler,
 public CefLoadHandler,
-public CefRenderHandler{
+public CefRenderHandler,
+public CefDownloadHandler{
 public:
     //Paint callback
     std::function<void(int browserId, const void* buffer, int32_t width, int32_t height)> onPaintCallback;
@@ -54,7 +55,25 @@ public:
     
     explicit WebviewHandler();
     ~WebviewHandler();
-    
+
+     virtual CefRefPtr<CefDownloadHandler> GetDownloadHandler() override {
+            return this;
+        }
+
+        // 다운로드 시작 시 호출
+        virtual void OnBeforeDownload(
+            CefRefPtr<CefBrowser> browser,
+            CefRefPtr<CefDownloadItem> download_item,
+            const CefString& suggested_name,
+            CefRefPtr<CefBeforeDownloadCallback> callback) override;
+
+        // 다운로드 상태 변경 시 호출
+        virtual void OnDownloadUpdated(
+            CefRefPtr<CefBrowser> browser,
+            CefRefPtr<CefDownloadItem> download_item,
+            CefRefPtr<CefDownloadItemCallback> callback) override;
+
+
     // CefClient methods:
     virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() override {
         return this;
