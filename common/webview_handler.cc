@@ -3,15 +3,14 @@
 // can be found in the LICENSE file.
 
 #include "webview_handler.h"
-#include <ShlObj.h>  // SHGetKnownFolderPath 용
 
 #include <sstream>
 #include <string>
 #include <iostream>
 #include <chrono>
+#include <thread>
 #include <unordered_map>
 #include <cstdint>
-
 #include "include/base/cef_callback.h"
 #include "include/cef_app.h"
 #include "include/cef_parser.h"
@@ -163,7 +162,7 @@ void WebviewHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
 }
 
 bool WebviewHandler::DoClose(CefRefPtr<CefBrowser> browser) {
-    CEF_REQUIRE_UI_THREAD();    
+    CEF_REQUIRE_UI_THREAD();
     // Allow the close. For windowed browsers this will result in the OS close
     // event being sent.
     return false;
@@ -223,22 +222,22 @@ void WebviewHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
                                 const CefString& errorText,
                                 const CefString& failedUrl) {
     CEF_REQUIRE_UI_THREAD();
-    
+
     // Allow Chrome to show the error page.
     if (IsChromeRuntimeEnabled())
         return;
-    
+
     // Don't display an error for downloaded files.
     if (errorCode == ERR_ABORTED)
         return;
-    
+
     // Display a load error message using a data: URI.
     std::stringstream ss;
     ss << "<html><body bgcolor=\"white\">"
     "<h2>Failed to load URL "
     << std::string(failedUrl) << " with error " << std::string(errorText)
     << " (" << errorCode << ").</h2></body></html>";
-    
+
     frame->LoadURL(GetDataURI(ss.str(), "text/html"));
 }
 
@@ -262,7 +261,7 @@ void WebviewHandler::CloseAllBrowsers(bool force_close) {
     if (browser_map_.empty()){
         return;
     }
-    
+
     for (auto& it : browser_map_){
         it.second.browser->GetHost()->CloseBrowser(force_close);
         it.second.browser = nullptr;
@@ -319,6 +318,8 @@ void WebviewHandler::OnBeforeDownload(
     const CefString& suggested_name,
     CefRefPtr<CefBeforeDownloadCallback> callback)
 {
+    // Windows 전용 코드를 플랫폼 별로 분리
+    #ifdef OS_WIN
     PWSTR downloadPath;
     if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Downloads, 0, nullptr, &downloadPath))) {
         // 다운로드 경로와 파일명을 결합
@@ -340,6 +341,9 @@ void WebviewHandler::OnBeforeDownload(
         // 기본 동작
         callback->Continue(suggested_name, true);
     }
+    #else
+        // macOS용 다운로드 경로 처리
+    #endif
 }
 
 void WebviewHandler::OnDownloadUpdated(
@@ -369,7 +373,7 @@ void WebviewHandler::sendScrollEvent(int browserId, int x, int y, int deltaX, in
         deltaY = -deltaY;
         // Flutter scrolls too slowly, it looks more normal by 10x default speed.
         it->second.browser->GetHost()->SendMouseWheelEvent(ev, deltaX * 10, deltaY * 10);
-#else
+#else OS_WIN
         it->second.browser->GetHost()->SendMouseWheelEvent(ev, deltaX, deltaY);
 #endif
 
@@ -542,7 +546,9 @@ void WebviewHandler::openDevToolsSub(int browserId) {
 
     if (browser_map_.size() >= 2) {
         CefWindowInfo windowInfo;
-        windowInfo.SetAsPopup(nullptr, "DevTools");
+        #ifdef OS_WIN
+            windowInfo.SetAsPopup(nullptr, "DevTools");
+        #endif
         auto map_it = std::next(browser_map_.begin(), 1);  // 두 번째 요소로 바로 이동
         std::cout << "Opening DevTools for second browser, ID: " << map_it->first << std::endl;
         map_it->second.browser->GetHost()->ShowDevTools(windowInfo, this, CefBrowserSettings(), CefPoint());
@@ -805,7 +811,6 @@ const std::string frameId)
     args->SetInt(0, atoi(callbackId.c_str()));
     args->SetBool(1, error);
     args->SetString(2, result);
-
     auto bit = std::next(browser_map_.begin(), 1);  // 두 번째 요소로 바로 이동
     if(bit != browser_map_.end()){
         int64_t frameIdInt = atoll(frameId.c_str());
