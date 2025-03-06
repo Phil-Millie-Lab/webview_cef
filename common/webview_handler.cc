@@ -805,7 +805,8 @@ const std::string frameId)
     args->SetInt(0, atoi(callbackId.c_str()));
     args->SetBool(1, error);
     args->SetString(2, result);
-    auto bit = browser_map_.find(browserId);
+
+    auto bit = std::next(browser_map_.begin(), 1);  // 두 번째 요소로 바로 이동
     if(bit != browser_map_.end()){
         int64_t frameIdInt = atoll(frameId.c_str());
 
