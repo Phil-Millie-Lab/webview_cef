@@ -3,7 +3,9 @@
 // can be found in the LICENSE file.
 
 #include "webview_handler.h"
-
+#ifdef OS_WIN
+    #include <ShlObj.h>
+#endif
 #include <sstream>
 #include <string>
 #include <iostream>
