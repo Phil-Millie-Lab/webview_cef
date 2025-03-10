@@ -26,7 +26,7 @@ Flutter webview backed by CEF (Chromium Embedded Framework)
     "FRAMEWORK_SEARCH_PATHS" => $cef_dir,
     "LIBRARY_SEARCH_PATHS" => $cef_dir
   }
-  
+
   s.platform = :osx, '11.0'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'x86_64 arm64'}
   s.swift_version = '5.0'
