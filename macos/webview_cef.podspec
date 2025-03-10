@@ -25,6 +25,6 @@ Flutter webview backed by CEF (Chromium Embedded Framework)
   # s.private_header_files = '../common/simple_app.h', '../common/simple_handler.h'
 
   s.platform = :osx, '10.13'
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'x86_64 arm64'}
   s.swift_version = '5.0'
 end
