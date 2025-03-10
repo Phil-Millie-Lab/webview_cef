@@ -16,14 +16,17 @@ Flutter webview backed by CEF (Chromium Embedded Framework)
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
   s.dependency 'FlutterMacOS'
-  s.vendored_frameworks = 'third/cef/Chromium Embedded Framework.framework'
-  s.vendored_libraries = 'third/cef/libcef_dll_wrapper.a'
+  s.vendored_frameworks = ['third/cef/Chromium Embedded Framework.framework']
+  s.vendored_libraries = ['third/cef/libcef_dll_wrapper.a']
 
   $dir = File.dirname(__FILE__)
-  $dir = $dir + "/third/cef/**"
-  s.xcconfig = { "HEADER_SEARCH_PATHS" => $dir}
-  # s.private_header_files = '../common/simple_app.h', '../common/simple_handler.h'
-
+  $cef_dir = $dir + "/third/cef"
+  s.xcconfig = {
+    "HEADER_SEARCH_PATHS" => "#{$cef_dir}/include",
+    "FRAMEWORK_SEARCH_PATHS" => $cef_dir,
+    "LIBRARY_SEARCH_PATHS" => $cef_dir
+  }
+  
   s.platform = :osx, '11.0'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'x86_64 arm64'}
   s.swift_version = '5.0'
