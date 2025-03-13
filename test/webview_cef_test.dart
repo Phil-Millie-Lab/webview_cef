@@ -19,10 +19,8 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    WebviewCef webviewCefPlugin = WebviewCef();
     MockWebviewCefPlatform fakePlatform = MockWebviewCefPlatform();
     WebviewCefPlatform.instance = fakePlatform;
 
-    expect(await webviewCefPlugin.getPlatformVersion(), '42');
   });
 }

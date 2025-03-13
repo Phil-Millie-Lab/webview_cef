@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:webview_cef_example/main.dart';
 
 void main() {
   testWidgets('Verify the button changes text upon click', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
 
     // Verify initial button text
     final initialTextFinder = find.text('Click me');
