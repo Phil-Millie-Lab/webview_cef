@@ -36,7 +36,6 @@ mixin WebeViewTextInput implements DeltaTextInputClient {
   @override
   didChangeInputControl(
       TextInputControl? oldControl, TextInputControl? newControl) {
-    print("changed");
   }
 
   @override

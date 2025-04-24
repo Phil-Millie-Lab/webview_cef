@@ -69,7 +69,6 @@ class _MyAppState extends State<MyApp> {
     //unified interface for all platforms set user agent
     _controller.setWebviewListener(WebviewEventsListener(
       onTitleChanged: (t) {
-        print("title : $t");
         setState(() {
           title = t;
         });
@@ -80,9 +79,6 @@ class _MyAppState extends State<MyApp> {
           JavascriptChannel(
               name: '_POST',
               onMessageReceived: (JavascriptMessage message) {
-                print(message.message);
-                print(jsonDecode(message.message));
-                print(jsonEncode(jsonDecode(message.message)));
                 _controller.sendJavaScriptChannelCallBack(
                     false,
                     "{'code':'200','message':'print succeed!'}",
@@ -94,15 +90,11 @@ class _MyAppState extends State<MyApp> {
         //also you can build your own jssdk by execute JavaScript code to CEF
         _controller.setJavaScriptChannels(jsChannels);
         _controller.executeJavaScript("function abc(e){return 'abc:'+ e}");
-        _controller
-            .evaluateJavascript("abc('test')")
-            .then((value) => print(value));
+
       },
       onLoadStart: (controller, url) {
-        print("onLoadStart => $url");
       },
       onLoadEnd: (controller, url) {
-        print("onLoadEnd => $url");
       },
     ));
 
@@ -198,15 +190,11 @@ class _MyAppState extends State<MyApp> {
                 height: 48,
                 child: MaterialButton(
                   onPressed: () async {
-                    print("openWebView 1");
                     await _controller.openWebView(url: "www.naver.com",);
                     final Set<JavascriptChannel> jsChannels2 = {
                       JavascriptChannel(
                           name: '_POST2',
                           onMessageReceived: (JavascriptMessage message) {
-                            print(message.message);
-                            print(jsonDecode(message.message));
-                            print(jsonEncode(jsonDecode(message.message)));
                             _controller.sendJavaScriptChannelCallBackSub(
                                 false,
                                 "{'code':'200','message':'print succeed!!!'}",
@@ -215,7 +203,6 @@ class _MyAppState extends State<MyApp> {
                           }),
                     };
                     _controller.setJavaScriptChannelsSub(jsChannels2);
-                    print("openWebView 2");
                   },
                   child: Text("openWebView"),
                 ),
@@ -228,9 +215,6 @@ class _MyAppState extends State<MyApp> {
                       JavascriptChannel(
                           name: '_POST2',
                           onMessageReceived: (JavascriptMessage message) {
-                            print(message.message);
-                            print(jsonDecode(message.message));
-                            print(jsonEncode(jsonDecode(message.message)));
                             _controller.sendJavaScriptChannelCallBackSub(
                                 false,
                                 "{'code':'200','message':'print succeed!!!'}",
@@ -281,7 +265,6 @@ class _MyAppState extends State<MyApp> {
                 child: MaterialButton(
                   onPressed: () async {
                     bool resp = await _controller.closeWebView();
-                    print("resp : $resp");
                   },
                   child: Text("closeWebView"),
                 ),
