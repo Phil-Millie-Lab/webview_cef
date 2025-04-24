@@ -123,8 +123,6 @@ namespace webview_cef {
 
 			m_handler->onJavaScriptChannelMessage = [=](std::string channelName, std::string message, std::string callbackId, int browserId, std::string frameId)
 			{
-				std::cout << "onJavaScriptChannelMessage : " << std::endl;
-
 				if (m_invokeFunc)
 				{
 					WValue* retMap = webview_value_new_map();
@@ -450,12 +448,6 @@ namespace webview_cef {
 			const auto callbackId = webview_value_get_string(webview_value_get_list_value(values, 2));
 			const auto browserId = int(webview_value_get_int(webview_value_get_list_value(values, 3)));
 			const auto frameId = webview_value_get_string(webview_value_get_list_value(values, 4));
-            std::cout << "error : " << error << std::endl;
-            std::cout << "ret : " << ret << std::endl;
-            std::cout << "callbackId : " << callbackId << std::endl;
-            std::cout << "browserId : " << browserId << std::endl;
-			std::cout << "frameId : " << frameId << std::endl;
-
 			m_handler->sendJavaScriptChannelCallBack(error, ret, callbackId, browserId, frameId);
 			result(1, nullptr);
 		}
@@ -465,14 +457,6 @@ namespace webview_cef {
         	const auto callbackId = webview_value_get_string(webview_value_get_list_value(values, 2));
         	const auto browserId = int(webview_value_get_int(webview_value_get_list_value(values, 3)));
         	const auto frameId = webview_value_get_string(webview_value_get_list_value(values, 4));
-           	            std::cout << "sendJavaScriptChannelCallBackSub : " << std::endl;
-
-        	            std::cout << "error : " << error << std::endl;
-                        std::cout << "ret : " << ret << std::endl;
-                        std::cout << "callbackId : " << callbackId << std::endl;
-                        std::cout << "browserId : " << browserId << std::endl;
-            			std::cout << "frameId : " << frameId << std::endl;
-
         	m_handler->sendJavaScriptChannelCallBackSub(error, ret, callbackId, browserId, frameId);
         	result(1, nullptr);
         }
@@ -564,7 +548,6 @@ namespace webview_cef {
 	}
 
 	void WebviewPlugin::setInvokeMethodFunc(std::function<void(std::string, WValue*)> func){
-	    std::cout << "setInvokeMethodFunc : " << std::endl;
 		m_invokeFunc = func;
 	}
 
