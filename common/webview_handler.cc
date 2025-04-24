@@ -821,9 +821,6 @@ void WebviewHandler::executeJavaScript(int browserId, const std::string code, st
 
 void WebviewHandler::executeJavaScriptSub(int browserId, const std::string code, std::function<void(CefRefPtr<CefValue>)> callback)
 {
-for (const auto& pair : browser_map_) {
-}
-
     if(!code.empty())
      {
          auto last_it = std::next(browser_map_.begin(), 1);  // 두 번째 요소로 바로 이동
