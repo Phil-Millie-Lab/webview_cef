@@ -154,6 +154,7 @@ class WebViewController extends ValueNotifier<bool> {
       return;
     }
     assert(value);
+    await Future.delayed(const Duration(milliseconds: 1000));
     return _pluginChannel.invokeMethod('openWebView', [_browserId, url, title]);
   }
 
@@ -163,6 +164,7 @@ class WebViewController extends ValueNotifier<bool> {
     }
     assert(value);
     bool result = await _pluginChannel.invokeMethod('closeWebView', _browserId);
+    await Future.delayed(const Duration(milliseconds: 1000));
     return result;
   }
 
